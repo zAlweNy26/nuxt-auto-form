@@ -75,6 +75,13 @@ declare module 'zod' {
      * @see https://ui.nuxt.com/components/form-field#help
      */
     help?: string
+
+    /**
+     * Intend to use `$t` function of `vue-i18n` to translate `title`, `description`, `hint`, and `help` texts.
+     *
+     * @remarks Added by `nuxt-auto-form`
+     */
+    i18n?: boolean
   }
 }
 

@@ -1,0 +1,9 @@
+{
+  "form": {
+    "text": "Text Input",
+    "email": "Email Address",
+    "enum": "Select an Option",
+    "description": "This is a description for the field.",
+    "bool": "Boolean Input"
+  }
+}

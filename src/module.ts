@@ -8,6 +8,9 @@ export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-auto-form',
     configKey: 'autoForm',
+    compatibility: {
+      nuxt: '>=3.0.0',
+    },
   },
   // Default configuration options of the Nuxt module
   defaults: {},

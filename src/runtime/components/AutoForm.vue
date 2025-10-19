@@ -2,11 +2,10 @@
 import type { FormSubmitEvent, InferInput, InferOutput } from '@nuxt/ui'
 import type * as z from 'zod'
 import type { AutoFormConfig } from '../types'
-import { useAppConfig } from '#app'
+import { useAppConfig, useNuxtApp } from '#app'
 import UButton from '@nuxt/ui/components/Button.vue'
 import UForm from '@nuxt/ui/components/Form.vue'
 import UFormField from '@nuxt/ui/components/FormField.vue'
-
 import defu from 'defu'
 import { splitByCase, upperFirst } from 'scule'
 import { computed, reactive, ref, toRaw, useSlots, useTemplateRef } from 'vue'
@@ -31,6 +30,7 @@ defineExpose({ submit })
 
 const formRef = useTemplateRef('form')
 const loading = ref(false)
+const { $i18n } = useNuxtApp()
 const shape = (props.schema as z.ZodObject<any>).shape
 
 const isButtonDisabled = computed(() => !props.schema.safeParse(state).success)
@@ -77,13 +77,15 @@ function findSlots(key: string): string[] {
     .map(name => name.slice(key.length + 1))
 }
 
-function parseMeta(meta: any, key: string) {
+function parseMeta(meta: Record<string, any>, key: string) {
+  const i18nEnabled = meta.i18n === true && !!$i18n
+  const t = ($i18n as any)?.t
   return {
-    label: meta.title ?? upperFirst(splitByCase(key).join(' ').toLowerCase()),
+    label: meta.title !== undefined ? (i18nEnabled ? t(meta.title) : meta.title) : upperFirst(splitByCase(key).join(' ').toLowerCase()),
+    description: i18nEnabled && meta.description ? t(meta.description) : meta.description,
+    hint: i18nEnabled && meta.hint ? t(meta.hint) : meta.hint,
+    help: i18nEnabled && meta.help ? t(meta.help) : meta.help,
     required: meta.required,
-    description: meta.description,
-    hint: meta.hint,
-    help: meta.help,
     class: meta.theme?.floatRight ? 'flex items-center justify-between text-left' : '',
   }
 }
