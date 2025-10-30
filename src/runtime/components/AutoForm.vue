@@ -1,15 +1,16 @@
 <script setup lang="ts" generic="T extends z.ZodObject<any>">
-import type { FormSubmitEvent, InferInput, InferOutput } from '@nuxt/ui'
+import type { FormErrorEvent, FormSubmitEvent, InferInput, InferOutput } from '@nuxt/ui'
 import type * as z from 'zod'
 import type { AutoFormConfig } from '../types'
 import { useAppConfig } from '#app'
 import UButton from '@nuxt/ui/components/Button.vue'
 import UForm from '@nuxt/ui/components/Form.vue'
 import UFormField from '@nuxt/ui/components/FormField.vue'
-
 import defu from 'defu'
+
+import { useEmitAsProps } from 'reka-ui'
 import { splitByCase, upperFirst } from 'scule'
-import { computed, reactive, ref, toRaw, useSlots, useTemplateRef } from 'vue'
+import { computed, reactive, toRaw, useSlots, useTemplateRef } from 'vue'
 import { COMPONENTS_MAP, mapZodTypeToComponent } from '../components_map'
 
 const props = withDefaults(defineProps<{
@@ -20,17 +21,15 @@ const props = withDefaults(defineProps<{
   initialState: () => ({}),
 })
 
-const emit = defineEmits<{
-  (e: 'submit', data: InferOutput<T>): void
+const emits = defineEmits<{
+  submit: [payload: FormSubmitEvent<InferOutput<T>>]
+  error: [payload: FormErrorEvent]
 }>()
-
+const emitsAsProps = useEmitAsProps(emits)
 const slots = useSlots()
 const state = reactive({ ...props.initialState })
 
-defineExpose({ submit })
-
 const formRef = useTemplateRef('form')
-const loading = ref(false)
 const shape = (props.schema as z.ZodObject<any>).shape
 
 const isButtonDisabled = computed(() => !props.schema.safeParse(state).success)
@@ -88,21 +87,6 @@ function parseMeta(meta: any, key: string) {
   }
 }
 
-async function onSubmit(event: FormSubmitEvent<InferOutput<T>>) {
-  event.preventDefault()
-  loading.value = true
-  try {
-    emit('submit', toRaw(event.data))
-  }
-  finally {
-    loading.value = false
-  }
-}
-
-function submit() {
-  formRef.value?.submit()
-}
-
 const submitButton = computed(() => {
   if (appConfig.value?.submit !== false)
     return appConfig.value?.submit
@@ -115,6 +99,10 @@ const submitButtonProps = computed(() => {
     ...submitButton.value?.props,
   }
 })
+
+defineExpose({
+  form: formRef,
+})
 </script>
 
 <template>
@@ -123,7 +111,7 @@ const submitButtonProps = computed(() => {
     :schema="schema"
     :state="(state as any)"
     class="space-y-4"
-    @submit="onSubmit"
+    v-bind="emitsAsProps"
   >
     <slot name="before-fields" />
 

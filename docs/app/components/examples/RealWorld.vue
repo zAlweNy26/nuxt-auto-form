@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormSubmitEvent, InferOutput } from '@nuxt/ui'
 import * as z from 'zod'
 
 const REFERRAL_SOURCES = [
@@ -49,7 +50,7 @@ const state = {
   age: 10,
 }
 
-async function onSubmit(_data: z.infer<typeof schema>) {
+async function onSubmit(_event: FormSubmitEvent<InferOutput<typeof schema>>) {
   // Send data to the server
   // BTW I suggest using nuxt-auto-form for that
   //

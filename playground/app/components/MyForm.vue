@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormSubmitEvent, InferOutput } from '@nuxt/ui'
 import { AInputWithClear } from '#components'
 import * as z from 'zod'
 
@@ -50,7 +51,7 @@ const schema = z.object({
     .meta({ title: 'Multiple Enum Input' }),
 })
 
-function onSubmit(data: Record<string, any>) {
+function onSubmit({ data }: FormSubmitEvent<InferOutput<typeof schema>>) {
   useToast().add({
     title: 'Form submitted',
     description: JSON.stringify(data, null, 2),

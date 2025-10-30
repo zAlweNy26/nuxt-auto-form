@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormSubmitEvent, InferOutput } from '@nuxt/ui'
 import * as z from 'zod'
 
 const schema = z.object({
@@ -8,8 +9,8 @@ const schema = z.object({
 const open = defineModel<boolean>()
 const formRef = useTemplateRef('form')
 
-async function onSubmit(event: z.infer<typeof schema>) {
-  useToast().add({ title: 'Code', description: event.code.join(''), color: 'success' })
+async function onSubmit({ data }: FormSubmitEvent<InferOutput<typeof schema>>) {
+  useToast().add({ title: 'Code', description: data.code.join(''), color: 'success' })
   open.value = false
 }
 </script>
@@ -31,7 +32,7 @@ async function onSubmit(event: z.infer<typeof schema>) {
 
     <template #footer>
       <UButton label="Close" color="neutral" variant="outline" @click="open = false" />
-      <UButton label="Send" @click="formRef?.submit()" />
+      <UButton label="Send" @click="formRef?.form?.submit()" />
     </template>
   </UModal>
 </template>
