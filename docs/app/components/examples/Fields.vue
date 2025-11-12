@@ -11,11 +11,18 @@ const schema = z.object({
       hint: 'Hint',
       help: 'Help',
     }),
-  input: z.number().meta({ input: {
-    props: {
-      placeholder: '69420',
+  input: z.number().meta({
+    title: 'input.title',
+    description: 'input.description',
+    hint: 'input.hint',
+    help: 'input.help',
+    i18n: true,
+    input: {
+      props: {
+        placeholder: '69420',
+      },
     },
-  } }),
+  }),
   style: z.boolean()
     .meta({ theme: { floatRight: true } }),
 })

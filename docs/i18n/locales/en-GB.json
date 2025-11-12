@@ -1,0 +1,8 @@
+{
+  "input": {
+    "title": "Input Field",
+    "description": "A customizable input field component.",
+    "hint": "Please enter your data.",
+    "help": "This field accepts alphanumeric characters."
+  }
+}

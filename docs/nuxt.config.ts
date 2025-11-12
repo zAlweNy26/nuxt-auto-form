@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
+    '@nuxtjs/i18n',
     '@norbiros/nuxt-auto-form',
     '@nuxt/eslint',
     '@nuxt/image',
@@ -82,6 +83,19 @@ export default defineNuxtConfig({
         contentFilters: [
           { field: 'path', operator: 'LIKE', value: '/essentials%' },
         ],
+      },
+    ],
+  },
+
+  i18n: {
+    defaultDirection: 'ltr',
+    defaultLocale: 'en',
+    locales: [
+      {
+        code: 'en',
+        language: 'en-GB',
+        name: 'English',
+        file: 'en-GB.json',
       },
     ],
   },
